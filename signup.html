@@ -22,33 +22,33 @@
     <img src="./assets/pessoa-signup.png" alt="">
   </div>
   <div class="right">
-    <form>
+    <form novalidate>
       <div class="form-header">
         <p>To-Do App</p>
       </div>
 
       <label>
         Nome:
-        <input type="text">
+        <input type="text" id="nomeCompleto" name="nomeCompleto" placeholder="Digite seu nome completo">
       </label>
       <label>
         Apelido:
-        <input type="text">
+        <input type="text" id="apelido" name="apelido" placeholder="Como você gosta de ser chamado?">
       </label>
       <label>
         Email:
-        <input type="text">
+        <input type="email" id="email" name="email" placeholder="Digite um e-mail válido">
       </label>
       <label>
         Senha:
-        <input type="password">
+        <input type="password" id="senha" name="senha" placeholder="Digite uma senha">
       </label>
       <label>
         Repetir senha:
-        <input type="password">
+        <input type="password" id="senhaValidacao" name="senhaValidacao" placeholder="Digite novamente a mesma senha">
       </label>
 
-      <button>Criar conta</button>
+      <button type="submit">Criar conta</button>
 
     </form>
     <div class="ingressar">
