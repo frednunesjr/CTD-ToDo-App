@@ -2,55 +2,52 @@
 <html lang="pt-BR">
 
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>To-Do App</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do App</title>
 
-	<!-- ---------------- estilos compartilhados entre login e signup ---------------- -->
-	<link rel="stylesheet" href="styles/acesso.css">
+  <!-- ---------------- estilos compartilhados entre login e signup ---------------- -->
+  <link rel="stylesheet" href="styles/acesso.css">
+
+  <!-- ---------------------- lógica aplicada no login ----------------------- -->
+  
+  
 
 </head>
 
 <body>
-	<div class="left">
-		<img src="./assets/pessoa-login.png" alt="">
-	</div>
+  <div class="left">
+    <img src="./assets/pessoa-login.png" alt="">
+  </div>
 
-	<div class="right">
-		<form id="login" novalidate>
-			<div class="form-header">
-				<p>To-Do App</p>
-			</div>
+  <div class="right">
+    <form action="">
+      <div class="form-header">
+        <p>To-Do App</p>
+      </div>
+      <h1>Acessar</h1>
 
-			<h1>Acessar</h1>
+      <div class="input">
+      <label>Email:</label>
+      <input id="inputEmail" type="email" name="inputEmail" required placeholder="Digite o e-mail da sua conta">
+      <span class="error"></span>
+      </div>
 
-			<label>
-				Email:
-				<input id="inputEmail" type="text" name="email" placeholder="Digite o e-mail da sua conta">
-			</label>
-			<label>
-				Senha:
-				<input id="inputPassword" type="senha" name="password" placeholder="Digite a sua senha">
-			</label>
+      <div class="input">
+      <label>Senha:</label>
+      <input id="inputPassword" type="password" name="inputPassword" required placeholder="Digite a sua senha">
+      <span class="error"></span>
+      </div>
 
-			<div id="error-list"> 
-				<ul>
-				</ul>
-			</div>
-			
-			<button type="submit">Acessar</button>
-
-		</form>
-		<div class="ingressar">
-			<a href="signup.html">Não possui conta? Crie agora mesmo</a>
-		</div>
-	</div>
-
+      <button type="submit">Acessar</button>
+    </form>
+    <div class="ingressar">
+      <a href="signup.html">Não possui conta? Crie agora mesmo</a>
+    </div>
+  </div>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/index.js"></script>
 </body>
-
-<!-- ---------------------- lógica aplicada no login ----------------------- -->
-	<!--<script src="/scripts/utils.js"></script>-->
-	<script src="scripts/index.js"></script>
 
 </html>
