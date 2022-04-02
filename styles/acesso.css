@@ -90,6 +90,11 @@ button {
   justify-content: center;
 }
 
+.error + small {
+  color: red;
+  display: block;
+}
+
 ul{
   color: red;
 }

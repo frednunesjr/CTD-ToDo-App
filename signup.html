@@ -41,12 +41,18 @@
       </label>
       <label>
         Senha:
-        <input type="password" id="senha" name="senha" placeholder="Digite uma senha">
+        <input type="password" id="senha" name="senha" minlength="6" placeholder="Digite uma senha">
       </label>
       <label>
         Repetir senha:
-        <input type="password" id="senhaValidacao" name="senhaValidacao" placeholder="Digite novamente a mesma senha">
+        <input type="password" id="senhaValidacao" name="senhaValidacao" placeholder="Digite novamente a mesma senha"> 
       </label>
+
+      <small class="erros">
+        <ul>
+
+        </ul>
+      </small>
 
       <button type="submit">Criar conta</button>
 
