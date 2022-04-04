@@ -1,46 +1,83 @@
-/* CRIACAO DAS FUNCOES */
+//pega todos os campos com required
+const campos = document.querySelectorAll("[required]");
 
-//seleciona os elementos por ID
-function selectId(id){
-    return document.getElementById(id)
-}
+//funcao que valida os campos e exibe mensagem de obrigatorio
+function validaCampo(campo){
+  //funcao que verifica os erros nos campos (vazio)
+  function verificaErros(){
+    let encontraErro = false;
 
-function vazia(entrada){
-    return entrada.value.trim() === "";
-}
-
-function errorMessage(message){
-    errorListUl.innerHTML += "<li>" + message + "</li>";
-}
-/* ---------------------------------------------*/
-
-
-//variaveis e seletores por ID
-let form = selectId('login');
-let email = selectId('inputEmail');
-let senha = selectId('inputPassword');
-let errorListUl = document.querySelector('#error-list ul');
-
-
-
-/*----------------------------------------------*/
-
-
-//evento de submissão do formulario
-form.addEventListener("submit", function (ev){
-    
-    ev.preventDefault();
-
-    errorListUl.innerHTML = '';
-
-    if(vazia(email)){
-        errorMessage("Campo <b>email</b> não preenchido");
-      
+    for(const erro in campo.validity){
+      if(campo.validity[erro] && !campo.validity.valid){
+        encontraErro = erro;
+      }
     }
 
-    if(vazia(senha)){
-        errorMessage("Campo <b>senha</b> não preenchido");
-    
-    }
+    return encontraErro;
+  }
 
-});
+  //funcao de customizacao da mensagem
+  function customizarMessagem(typeError){
+    //objeto mensagem com os estados de validacao da mensagem
+    const messagens = {
+      password: {
+        valueMissing: "Campo precisa ser preenchido"
+      },
+      email: {
+        valueMissing: "Email é obrigatório",
+        typeMismatch: "Preencha um email válido"
+      }
+    }
+    //retornando o objeto messagens e a chave com type password ou email
+    return messagens[campo.type][typeError]
+  }
+
+  //mensagem customizada da caixa
+  function setMessagem(message = "Campo obrigatorio"){
+    const spanErro = campo.parentNode.querySelector("span.error");
+    //condicional que ativa a mensagem de texto e remove quando estiver preenchido
+    if(message){
+      spanErro.classList.add("active");
+      spanErro.innerHTML = message;
+    } else{
+      spanErro.classList.remove("active");
+      spanErro.innerHTML = "";
+    }
+    
+  }
+  //retorna a funcao para mensagem customizavel
+  return function(){
+
+    if(verificaErros()){
+      const message = customizarMessagem(verificaErros());
+      campo.style.borderColor = "red";
+      setMessagem(message);
+    } else {
+      campo.style.borderColor = "green";
+      setMessagem("");
+    }
+  }
+}
+
+
+//funcao que valida o campo email e senha
+function valida(event){
+  const campo = event.target;
+  const validacao = validaCampo(campo);
+  validacao();
+}
+
+for(let campo of campos){
+  campo.addEventListener("invalid", event => {
+    event.preventDefault();
+    valida(event);
+  });
+  campo.addEventListener("blur", valida);
+  
+}
+document.querySelector("form").addEventListener("submit", event => {
+  //console.log("enviar o formulario");
+
+  //previne o envio do formulario
+  event.preventDefault();
+})
