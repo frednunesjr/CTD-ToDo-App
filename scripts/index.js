@@ -80,4 +80,33 @@ document.querySelector("form").addEventListener("submit", event => {
 
   //previne o envio do formulario
   event.preventDefault();
+
+  let email = document.querySelector("#inputEmail");
+  let senha = document.querySelector("#inputPassword");
+
+  let dadosUsuario = {
+    email: email.value,
+    password: senha.value
+  }
+
+  // let api = ;
+  let promessa = fetch("https://ctd-todo-api.herokuapp.com/v1/users/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(dadosUsuario)
+  });
+
+  promessa
+  .then(function(res){
+    return res.json();
+  })
+  .then(function(info){
+    console.log(info)
+  })
+  .catch(function(err){
+    console.log(err)
+  })
+
 })

@@ -99,5 +99,32 @@ window.onload = () => {
 		if (senha.value !== senhaValidacao.value) {
 			validaCampo(senhaValidacao, "A senha é diferente da informada no campo anterior");
 		}
+
+		let dadosUsuario = {
+			firstName: nomeCompleto.value,
+			lastName: apelido.value,
+			email: email.value,
+			password: senha.value
+		}
+
+		// Precisamos salvar o token no Local Storage
+		let promessa = fetch("https://ctd-todo-api.herokuapp.com/v1/users", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(dadosUsuario)
+		});
+
+		promessa
+		.then(function(res){
+			return res.json();
+		})
+		.then(function(info){
+			console.log(info)
+		})
+		.catch(function(err){
+			console.log(err)
+		})
 	});
 }
