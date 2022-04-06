@@ -102,8 +102,10 @@ document.querySelector("form").addEventListener("submit", event => {
   .then(function(res){
     return res.json();
   })
-  .then(function(info){
-    console.log(info)
+  .then(function(data){
+    const token = data.jwt;
+			localStorage.setItem('token', token);
+			console.log(data)
   })
   .catch(function(err){
     console.log(err)
