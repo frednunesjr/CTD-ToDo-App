@@ -98,17 +98,7 @@ button {
   margin: 5px;
 }
 
-span.error {
-  display: flex;
-  padding: 0;
-  background-color: rgb(255, 0, 0, 0.2);
-
-
-
-}
-
-span.error.active {
-  border: 1px solid red;
-  padding: 0.4em;
-
+.inputError {
+  font-size: 0.6rem;
+  color: red;
 }
