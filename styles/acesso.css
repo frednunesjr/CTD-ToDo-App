@@ -15,7 +15,7 @@ form {
   max-width: 26em;
   background-color: white;
   display: flex;
-  align-items: center;
+  gap: 5px;
   flex-direction: column;
   margin: 2em auto;
   box-shadow: 0 5px 5px lightgrey;
@@ -35,7 +35,6 @@ form:after {
 
 
 input {
-  width: 100%;
   padding: .4em .5em;
   background-color: var(--app-grey);
   border: 1px solid var(--app-grey);
@@ -50,8 +49,6 @@ input:focus {
 label {
   width: 100%;
   font-weight: 300;
-  margin-bottom: -.1em;
-  margin-top: 1em;
   font-size: .8em;
 }
 
@@ -59,7 +56,6 @@ button {
   padding: .5em 3em;
   background-color: var(--primary);
   color: white;
-  margin-top: 2em;
   font-weight: 400;
   font-size: 1em;
 }
@@ -95,10 +91,15 @@ button {
 }
 
 .input {
-  margin: 5px;
+  display: grid;
+  gap: 5px;
 }
 
 .inputError {
+  background-color: red;
+  color: #fff;
   font-size: 0.6rem;
-  color: red;
+  padding: 5px;
+  border-radius: 2px;
+  visibility: hidden;
 }

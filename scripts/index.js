@@ -21,25 +21,20 @@ const invalidListener = function(event){
 	//verifica os erros nos campos (vazio)
 	for(let erro in this.validity){
 		
-		let spanErro	= this.parentNode.querySelector(".inputError");
-		if(this.validity[erro] && !this.validity.valid && !spanErro){
+		if(this.validity[erro] && !this.validity.valid){
 			// campo.setCustomValidity(mensagem[campo.type][erro]);
-			let spanErro 	= document.createElement('span');
-			
 			//mensagem customizada da caixa
-			let textoErro	= document.createTextNode(mensagem[this.type][erro]);
-			spanErro.classList.add('inputError');
-			spanErro.appendChild(textoErro);
-			this.parentNode.appendChild(spanErro);
-			this.style.borderColor = "red";
+			let spanErro				= this.parentNode.querySelector(".inputError");
+			spanErro.style.visibility	= "visible";
+			spanErro.textContent		= mensagem[this.type][erro];
+			this.style.borderColor 		= "red";
 		}
 	}
 }
 
 const limparValidacao = function(){
 	let spanErro = this.parentNode.querySelector(".inputError");
-	if(spanErro)
-	this.parentNode.removeChild(spanErro);
+	spanErro.style.visibility	= "hidden";
 	this.removeAttribute("style");
 }
 
@@ -97,15 +92,8 @@ form.addEventListener("submit", event => {
 	})
 	.catch((err) => {
 		let spanErro	= form.querySelector(".inputError");
-		
-		if(!spanErro) {
-			let spanErro 	= document.createElement('span');
-			let textoErro	= document.createTextNode(err);
-			spanErro.classList.add('inputError');
-			spanErro.appendChild(textoErro); 
-			form.appendChild(spanErro);
-		} else {
-			spanErro.textContent = err;
-		}
+		spanErro.appendChild(textoErro); 
+		form.appendChild(spanErro);
+		spanErro.textContent = err;
 	});
 })
