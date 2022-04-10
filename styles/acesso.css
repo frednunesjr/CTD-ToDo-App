@@ -95,7 +95,7 @@ button {
   gap: 5px;
 }
 
-.inputError {
+.inputError, .loginError {
   background-color: red;
   color: #fff;
   font-size: 0.6rem;
