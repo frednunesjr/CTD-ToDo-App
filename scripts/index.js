@@ -52,12 +52,12 @@ form.addEventListener("submit", event => {
 	//previne o envio do formulario
 	event.preventDefault();
 	
-	let email = document.querySelector("#inputEmail");
-	let senha = document.querySelector("#inputPassword");
+	let email = document.querySelector("#email");
+	let senha = document.querySelector("#senha");
 	
 	let dadosUsuario = {
-		email: email.value,
-		password: senha.value
+		email: 		email.value,
+		password: 	senha.value
 	}
 	
 	let api = "https://ctd-todo-api.herokuapp.com/v1/users/login";
@@ -83,7 +83,7 @@ form.addEventListener("submit", event => {
 	})
 	.then((data) => {
 		if(data) {
-			const token = data.jwt;
+			let token = data.jwt;
 			localStorage.setItem('token', token);
 			window.location.href = "./tarefas.html";
 		} else {
