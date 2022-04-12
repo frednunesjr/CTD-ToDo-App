@@ -12,7 +12,7 @@ h1 {
 
 form {
   position: relative;
-  max-width: 26em;
+  width: 25vw;
   background-color: white;
   display: flex;
   gap: 5px;
@@ -35,7 +35,7 @@ form:after {
 
 
 input {
-  padding: .4em .5em;
+  padding: .8em .5em;
   background-color: var(--app-grey);
   border: 1px solid var(--app-grey);
   border-radius: .2em;
@@ -95,10 +95,10 @@ button {
   gap: 5px;
 }
 
-.inputError, .loginError {
+.inputError, .formError {
   background-color: red;
   color: #fff;
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   padding: 5px;
   border-radius: 2px;
   visibility: hidden;

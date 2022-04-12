@@ -118,7 +118,7 @@ form.addEventListener("submit", event => {
 		}
 	})
 	.catch(function(err){
-		let spanErro	= form.querySelector(".signUpError");
+		let spanErro	= form.querySelector(".formError");
 		spanErro.textContent = err;
 		spanErro.style.visibility = "visible";
 	})
