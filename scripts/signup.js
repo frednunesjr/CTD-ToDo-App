@@ -40,7 +40,7 @@ const invalidListener = function(event){
 	}
 	
 	//verifica os erros nos campos (vazio)
-	let spanErro				= this.parentNode.querySelector(".inputError");
+	let spanErro	= this.parentNode.querySelector(".inputError");
 	
 	for(let erro in this.validity){
 		
