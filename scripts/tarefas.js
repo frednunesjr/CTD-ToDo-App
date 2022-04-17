@@ -1,73 +1,113 @@
-//funcao selecao por query
-const selectElement = (element) => {
-	return document.querySelector(element);
+import u from './utils.js';
+
+// Conferir se o usuário está logado
+u.estaLogado();
+
+// Listar as tarefas do usuário na tela e remover o skelleton
+const blocoTarefaOptions = {
+	destino		: ".tarefas-pendentes",
+	divStatus	: "not-done"
 }
 
-//funcao selecao por Id
-const selectElementId = (elementId) => {
-	return document.getElementById(elementId).value;
+const blocoTarefa = (data, options = blocoTarefaOptions) => {
+	let ul 					= u.selectElement(options.destino);
+
+	let li 					= u.createElement("li");
+	li.className			= "tarefa";
+	li.id					= data.id;
+	
+	let divStatus 			= u.createElement("div");
+	divStatus.className 	= options.divStatus;
+	
+	let divDescricao 		= u.createElement("div");
+	divDescricao.className 	= "descricao";
+	
+	let pDescricao			= u.createElement("p");
+	pDescricao.className	= "nome"
+	pDescricao.textContent	= data.description;
+
+	let pTimestamp			= u.createElement("p");
+	pTimestamp.className	= "timestamp";
+
+	let timestampToDate		= new Date(data.createdAt).toLocaleString("pt-BR");
+	pTimestamp.textContent	= timestampToDate;
+
+	divDescricao.appendChild(pDescricao);
+	divDescricao.appendChild(pTimestamp);
+	li.appendChild(divStatus);
+	li.appendChild(divDescricao);
+	ul.appendChild(li);
+
 }
+
+let obterTarefas 	= await u.fetchAPI('/tasks', 'GET', '', u.token);
+let listaTarefas 	= await obterTarefas.json();
+
+let skeleton 	= u.selectElementId("skeleton");
+skeleton.removeAttribute("id");
+
+let tarefasPendentes = u.selectElement(".tarefas-pendentes");
+let tarefasSkeleton  = u.selectAllElements(".tarefa");
+
+tarefasSkeleton.forEach(item => tarefasPendentes.removeChild(item));
+
+listaTarefas.reverse().forEach(data => { 
+	if (!data.completed)
+		blocoTarefa(data)
+	else
+		blocoTarefa(data, {destino: ".tarefas-terminadas", divStatus: "not-done"})
+});
+
+// Função para alterar o status da tarefa -> Walysson
+
+const tarefaStatus = (id, status) => {
+	let body = {
+		completed: status
+	}
+
+	return u.fetchAPI(`/tasks/${id}`, "PUT", body, u.token);
+};
+
+const botoesConcluir = u.selectAllElements('.not-done');
+// Ao clicar, remover da lista de pendentes e mover para lista de concluidas (clone, remove, append)
+botoesConcluir.forEach((botao, index) => {
+
+	let listener = () => {
+		let id = botao.parentNode.id;
+		tarefaStatus(id, true)
+		.then(resposta 	=> resposta.json())
+		.then(dados 	=> {
+			botao.parentNode.remove();
+			blocoTarefa(dados, {destino: ".tarefas-terminadas", divStatus: "not-done"});
+		})
+		.catch(err 		=> console.log(err));
+	}
+
+	if(index > 0) {
+		botao.addEventListener('click', listener);
+	}
+
+});
+
+
+
 
 // Capturar o formulário de nova tarefa
-const formTarefa = selectElement(".nova-tarefa");
-
-//funcao de criacao dos elementos
-function createNode(element){
-	return document.createElement(element);
-}
-
-
-//funcao de apensar os filhos
-function append(parent, el){
-	return parent.appendChild(el);
-}
-
-
-// Função para fazer um Fetch na API
-const fetchAPI = (path, method, body, token) => {
-	let api = `https://ctd-todo-api.herokuapp.com/v1${path}`;  // Define o caminho da API
-	let headers = {}; // Cabeçalhos vazios
-	
-	// Se houver token, envia o token no cabeçalho
-	// Do contrário, só envia o Content Type
-	if(token) {
-		headers = {
-			"Content-Type": "application/json",
-			"authorization": token
-		}
-	} else {
-		headers = {
-			"Content-Type": "application/json",
-		}
-	}
-
-	// Se houver um corpo, envia o corpo na requisição
-	// Do contrário não envia corpo
-	if(body) {
-		return fetch(api, {
-			method: method,
-			headers: headers,
-			body: JSON.stringify(body)
-		});
-	} else {
-		return fetch(api, {
-			method: method,
-			headers: headers
-		})
-	}
-}
+const formTarefa = u.selectElement(".nova-tarefa");
 
 // Criar nova tarefa
 formTarefa.addEventListener("submit", event => {
+	
 	event.preventDefault();
 	
 	// Pegar o valor do input
-	const tarefa = selectElementId("novaTarefa");
-	//mostrar os dados
+	const tarefa = u.selectElementId("novaTarefa");
+	
+	// Mostra os dados
 	const showData = (result) => {
 		for(const campo in result){
-			if(selectElement('#'+campo)){
-				selectElement('#'+campo).textContent = result[campo];
+			if(u.selectElement('#'+campo)){
+				u.selectElement('#'+campo).textContent = result[campo];
 			}
 			//console.log(campo);
 		}
@@ -78,11 +118,8 @@ formTarefa.addEventListener("submit", event => {
 		completed: false
 	}
 
-	
-
-
 	// Fetch na API > enviando os dados do input
-	let criarTarefa = fetchAPI('/tasks', 'POST', descriptionTarefa, token);
+	let criarTarefa = u.fetchAPI('/tasks', 'POST', descriptionTarefa, u.token);
 	criarTarefa
 	.then(res => res.json())
 	.then(data => showData(data));
@@ -91,33 +128,20 @@ formTarefa.addEventListener("submit", event => {
 });
 
 	
+//secao que acomoda todas as tarefas pendentes
 	
-	/*------ funcao para mostrar as tarefas no html -----*/
-	
-	//secao que acomoda todas as tarefas pendentes
-	
-	
-	let listarTarefas = fetchAPI('/tasks', 'GET', '', token);
-	listarTarefas
-	.then(res => res.json())
-	.then(data => console.log(data));
-		//atribuirCampos(data);
-	//});
+
+	//atribuirCampos(data);
+//});
 
 //funcao para atribuir aos campos
 // function atribuirCampos(data){
-	
-	
 	
 // 	let addTimeStamp = selectElement('.timestamp');
 // 	console.log(data);
 	//addNewTarefa.value = data.description;
 	//addTimeStamp.value = data.completed;
 
-
-
-
-	
 
 	// <div id="skeleton">
   //     <li class="tarefa">

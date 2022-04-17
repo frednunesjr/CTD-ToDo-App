@@ -1,21 +1,17 @@
 /*
 * Criada uma função para selecionar os elementos
 */
-const selectElement = (element) => {
-	return document.querySelector(element);
-}
+import u from './utils.js';
 
-const selectAllElements = (elements) => {
-	return document.querySelectorAll(elements);
-}
+u.estaLogado();
 
-const form				= selectElement("form");
-const campos			= selectAllElements("[required]");
-const nomeCompleto 		= selectElement("#nome");
-const apelido			= selectElement("#sobrenome");
-const email				= selectElement("#email");
-const senha 			= selectElement("#senha");
-const senhaValidacao	= selectElement("#senhaValidacao");
+const form				= u.selectElement("form");
+const campos			= u.selectAllElements("[required]");
+const nomeCompleto 		= u.selectElement("#nome");
+const apelido			= u.selectElement("#sobrenome");
+const email				= u.selectElement("#email");
+const senha 			= u.selectElement("#senha");
+const senhaValidacao	= u.selectElement("#senhaValidacao");
 
 //funcao que valida os campos e exibe mensagem de obrigatorio
 const invalidListener = function(event){
