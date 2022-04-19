@@ -1,5 +1,7 @@
 # Projeto To Do - Checkpoint II
 
+Integrantes: Fredson Junior, Micheli Pinheiro, Wallyson Silva, Camila Ferreira, Caroline Bertoldo
+
 MVP Checklist:
 
 - Login (index.html)
