@@ -93,7 +93,7 @@ botoesConcluir.forEach((botao, index) => {
 			.then(resposta => resposta.json())
 			.then(dados => {
 				botao.parentNode.remove();
-				blocoTarefa(dados, { destino: ".tarefas-terminadas", divStatus: "not-done" });
+				blocoTarefa(dados, { destino: ".tarefas-terminadas" });
 			})
 			.catch(err => console.log(err));
 	}
