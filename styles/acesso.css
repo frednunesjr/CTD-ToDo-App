@@ -103,3 +103,17 @@ button {
   border-radius: 2px;
   visibility: hidden;
 }
+
+@media screen and (max-width: 720px){
+  body {
+    flex-direction: column;
+  }
+
+  .left, .right{
+    width: 100%;
+  }
+
+  form {
+    width: 90%;
+  }
+}

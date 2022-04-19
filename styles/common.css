@@ -22,3 +22,7 @@ button {
   border-radius: 3px;
   cursor: pointer;
 }
+
+input {
+  width: 100%;
+}
