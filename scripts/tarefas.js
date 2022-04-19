@@ -3,10 +3,21 @@ import u from './utils.js';
 // Conferir se o usuário está logado
 u.estaLogado();
 
+// Exibir dados do usuário na tela
+const dadosUsuario = u.fetchAPI("/users/getMe", "GET", "", u.token)
+.then(res => res.json())
+.then( dados => {
+	const divUsuario 	= u.selectElement(".user-info");
+	const pNomeUsuario	= divUsuario.querySelector("p");
+	pNomeUsuario.textContent = `${dados.firstName} ${dados.lastName}`
+})
+
+
 // Listar as tarefas do usuário na tela e remover o skelleton
 const blocoTarefaOptions = {
 	destino		: ".tarefas-pendentes",
-	divStatus	: "not-done"
+	divStatus	: "not-done",
+	prepend		: true,
 }
 
 const blocoTarefa = (data, options = blocoTarefaOptions) => {
@@ -36,7 +47,11 @@ const blocoTarefa = (data, options = blocoTarefaOptions) => {
 	divDescricao.appendChild(pTimestamp);
 	li.appendChild(divStatus);
 	li.appendChild(divDescricao);
-	ul.appendChild(li);
+
+	if(options.prepend)
+		ul.prepend(li);
+	else
+		ul.appendChild(li);
 
 }
 
@@ -51,15 +66,15 @@ let tarefasSkeleton  = u.selectAllElements(".tarefa");
 
 tarefasSkeleton.forEach(item => tarefasPendentes.removeChild(item));
 
-listaTarefas.reverse().forEach(data => { 
+listaTarefas.forEach(data => { 
 	if (!data.completed)
 		blocoTarefa(data)
 	else
 		blocoTarefa(data, {destino: ".tarefas-terminadas", divStatus: "not-done"})
 });
 
-// Função para alterar o status da tarefa -> Walysson
 
+// Função para alterar o status da tarefa -> Walysson
 const tarefaStatus = (id, status) => {
 	let body = {
 		completed: status
@@ -68,6 +83,7 @@ const tarefaStatus = (id, status) => {
 	return u.fetchAPI(`/tasks/${id}`, "PUT", body, u.token);
 };
 
+/* funcao para mudar o status da tarefa -- Walysson */
 const botoesConcluir = u.selectAllElements('.not-done');
 // Ao clicar, remover da lista de pendentes e mover para lista de concluidas (clone, remove, append)
 botoesConcluir.forEach((botao, index) => {
@@ -78,7 +94,7 @@ botoesConcluir.forEach((botao, index) => {
 		.then(resposta 	=> resposta.json())
 		.then(dados 	=> {
 			botao.parentNode.remove();
-			blocoTarefa(dados, {destino: ".tarefas-terminadas", divStatus: "not-done"});
+			blocoTarefa(dados, {destino: ".tarefas-terminadas", divStatus: "not-done", prepend: true});
 		})
 		.catch(err 		=> console.log(err));
 	}
@@ -88,9 +104,6 @@ botoesConcluir.forEach((botao, index) => {
 	}
 
 });
-
-
-
 
 // Capturar o formulário de nova tarefa
 const formTarefa = u.selectElement(".nova-tarefa");
@@ -114,7 +127,7 @@ formTarefa.addEventListener("submit", event => {
 	}
 	//dados da tarefa
 	let descriptionTarefa = {
-		description: tarefa,
+		description: tarefa.value,
 		completed: false
 	}
 
@@ -160,8 +173,6 @@ formTarefa.addEventListener("submit", event => {
 // .then(res => res.json())
 // .then(data => console.log(data));
 
-
-
 // Função para Apagar uma Tarefa
 // Refatorar usando a fetchAPI() mantendo o id da tarefa
 let apagarTarefa = (token, id) => {
@@ -175,5 +186,11 @@ let apagarTarefa = (token, id) => {
   	});
 };
 
-/* funcao para mudar o status da tarefa -- Walysson */
-/* funcao para deslogar -- Caroline */
+// Função para deslogar -- Caroline
+const deslogar = () => {
+	localStorage.removeItem("token");
+	window.location.href = "/";
+}
+
+const closeApp = u.selectElementId("closeApp");
+closeApp.addEventListener("click", deslogar);
