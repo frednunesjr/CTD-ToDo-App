@@ -40,8 +40,8 @@ const blocoTarefa = (data, options = blocoTarefaOptions) => {
 	let pTimestamp = u.createElement("p");
 	pTimestamp.className = "timestamp";
 
-	let timestampToDate = new Date(data.createdAt).toLocaleString("pt-BR");
-	pTimestamp.textContent = timestampToDate;
+	let timestampToDate = new Date(data.createdAt).toLocaleDateString("pt-BR");
+	pTimestamp.textContent = `Criado em ${timestampToDate}`;
 
 	divDescricao.appendChild(pDescricao);
 	divDescricao.appendChild(pTimestamp);
