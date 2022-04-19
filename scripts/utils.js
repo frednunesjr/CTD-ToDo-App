@@ -3,11 +3,11 @@ const pagina = window.location.pathname;
 
 function estaLogado() {
 
-    if (!token && pagina == '/tarefas.html'){
-        window.location.href = "./index.html";
-    } else if(token && pagina != '/tarefas.html') {
-        window.location.href = "./tarefas.html";
-    }
+	if (!token && pagina == '/tarefas.html') {
+		window.location.href = "./index.html";
+	} else if (token && pagina != '/tarefas.html') {
+		window.location.href = "./tarefas.html";
+	}
 }
 
 // Selecionar um Elemento via Tag, Id ou Classe
@@ -39,10 +39,10 @@ function append(parent, el) {
 function fetchAPI(path, method, body, token) {
 	let api = `https://ctd-todo-api.herokuapp.com/v1${path}`;  // Define o caminho da API
 	let headers = {}; // Cabeçalhos vazios
-	
+
 	// Se houver token, envia o token no cabeçalho
 	// Do contrário, só envia o Content Type
-	if(token) {
+	if (token) {
 		headers = {
 			"Content-Type": "application/json",
 			"authorization": token
@@ -55,7 +55,7 @@ function fetchAPI(path, method, body, token) {
 
 	// Se houver um corpo, envia o corpo na requisição
 	// Do contrário não envia corpo
-	if(body) {
+	if (body) {
 		return fetch(api, {
 			method: method,
 			headers: headers,
