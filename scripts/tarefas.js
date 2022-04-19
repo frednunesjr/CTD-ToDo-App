@@ -69,7 +69,7 @@ listaTarefas.reverse().forEach(data => {
 	if (!data.completed)
 		blocoTarefa(data)
 	else
-		blocoTarefa(data, { destino: ".tarefas-terminadas", divStatus: "not-done" })
+		blocoTarefa(data, { destino: ".tarefas-terminadas" })
 });
 
 
