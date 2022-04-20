@@ -1,19 +1,58 @@
-import u from './utils.js';
+import u from './utils.js'; // Utils importada como módulo
 
-// Conferir se o usuário está logado
-u.estaLogado();
+/**
+ * --------------------------------------------
+ * 					FUNÇÕES
+ * --------------------------------------------
+ */
 
-// Exibir dados do usuário na tela
-const dadosUsuario = u.fetchAPI("/users/getMe", "GET", "", u.token)
-.then(res => res.json())
-.then( dados => {
-	const divUsuario 	= u.selectElement(".user-info");
-	const pNomeUsuario	= divUsuario.querySelector("p");
-	pNomeUsuario.textContent = `${dados.firstName} ${dados.lastName}`
-})
+// Função para alterar o status da tarefa -> Walysson
+const tarefaPUT = (id, status) => u.fetchAPI(`/tasks/${id}`, "PUT", {completed: status}, u.token);
 
+// Função para apagar uma tarefa
+const tarefaDELETE = (id, token) => u.fetchAPI(`/tasks/${id}`, "DELETE", null, u.token);
 
-// Listar as tarefas do usuário na tela e remover o skelleton
+// Event Listener para Concluir a Tarefa
+const concluirTarefa = function(){
+
+	let parent 	= this.parentNode;
+	let id 		= parent.id;
+
+	tarefaPUT(id, true)
+		.then(resposta => resposta.json())
+		.then(dados => {
+			parent.remove();
+			blocoTarefa(dados, { destino: ".tarefas-terminadas" });
+		})
+		.catch(err => console.log(err));
+}
+
+// Event Listener para Excluit a Tarefa
+const excluirTarefa = function(){
+
+	let id = this.parentNode.parentNode.parentNode.id;
+	tarefaDELETE(id)
+		.then(resposta => {
+			if(resposta.ok)
+				this.parentNode.parentNode.parentNode.remove()
+		})
+		.catch(err => console.log(err));
+}
+
+// Função para desfazer conclusao da tarefa
+const inconcluirTarefa = function(){
+	let parent 	= this.parentNode.parentNode.parentNode;
+	let id 		= parent.id;
+
+	tarefaPUT(id, false)
+		.then(resposta => resposta.json())
+		.then(dados => {
+			parent.remove();
+			blocoTarefa(dados, { destino: ".tarefas-pendentes", divStatus: "not-done" });
+		})
+}
+
+// Função para criar um bloco <li> com uma tarefa
 const blocoTarefaOptions = {
 	destino: ".tarefas-pendentes",
 	divStatus: "not-done",
@@ -23,86 +62,87 @@ const blocoTarefaOptions = {
 const blocoTarefa = (data, options = blocoTarefaOptions) => {
 	let ul = u.selectElement(options.destino);
 
-	let li = u.createElement("li");
-	li.className = "tarefa";
-	li.id = data.id;
+	let li 					= u.createElement("li");
+	li.className 			= "tarefa";
+	li.id 					= data.id;
 
-	let divStatus = u.createElement("div");
-	divStatus.className = options.divStatus;
+	let divStatus 			= u.createElement("div");
+	divStatus.className 	= options.divStatus;
 
-	let divDescricao = u.createElement("div");
-	divDescricao.className = "descricao";
+	let divDescricao 		= u.createElement("div");
+	divDescricao.className 	= "descricao";
 
-	let pDescricao = u.createElement("p");
-	pDescricao.className = "nome"
-	pDescricao.textContent = data.description;
+	let pDescricao 			= u.createElement("p");
+	pDescricao.className 	= "nome"
+	pDescricao.textContent	= data.description;
 
-	let pTimestamp = u.createElement("p");
-	pTimestamp.className = "timestamp";
+	let pTimestamp 			= u.createElement("p");
+	pTimestamp.className 	= "timestamp";
 
-	let timestampToDate = new Date(data.createdAt).toLocaleDateString("pt-BR");
-	pTimestamp.textContent = `Criado em ${timestampToDate}`;
+	let timestampToDate		= new Date(data.createdAt).toLocaleDateString("pt-BR");
+	pTimestamp.textContent	= `Criada em ${timestampToDate}`;
 
+	let spanActions			= u.createElement('span');
+	
+	if(options.destino == ".tarefas-pendentes"){
+		spanActions.innerHTML	= "<i class='fas fa-trash'></i>"
+		divStatus.addEventListener("click", concluirTarefa);
+	} else {
+		spanActions.innerHTML	= "<i class='fas fa-trash'></i> <i class='fas fa-undo'></i>";
+		let botaoInconcluir = spanActions.querySelector(".fa-undo");
+		botaoInconcluir.addEventListener("click", inconcluirTarefa); 
+	}
+	
+	let botaoExcluir = spanActions.querySelector(".fa-trash");
+	botaoExcluir.addEventListener("click", excluirTarefa);
+
+	
 	divDescricao.appendChild(pDescricao);
 	divDescricao.appendChild(pTimestamp);
+	divDescricao.appendChild(spanActions);
+
 	li.appendChild(divStatus);
 	li.appendChild(divDescricao);
-	if (options.append) {
-		ul.appendChild(li);
-	} else {
-		ul.prepend(li);
-	}
+
+	options.append ? ul.appendChild(li) : ul.prepend(li);
+
 }
 
+/**
+ * --------------------------------------------
+ * 					AÇÕES
+ * --------------------------------------------
+ */
+
+// Conferir se o usuário está logado
+u.estaLogado();
+
+// Exibir dados do usuário na tela
+u.fetchAPI("/users/getMe", "GET", "", u.token)
+	.then(res => res.json())
+	.then( dados => {
+		const divUsuario 		 = u.selectElement(".user-info");
+		const pNomeUsuario		 = divUsuario.querySelector("p");
+		pNomeUsuario.textContent = `${dados.firstName} ${dados.lastName}`
+	});
+
+// Obtém a lista de tarefas
 let obterTarefas = await u.fetchAPI('/tasks', 'GET', '', u.token);
 let listaTarefas = await obterTarefas.json();
 
+// Selecionar o skeleton e remove ele
 let skeleton = u.selectElementId("skeleton");
-skeleton.removeAttribute("id");
+skeleton.remove();
 
-let tarefasPendentes = u.selectElement(".tarefas-pendentes");
-let tarefasSkeleton = u.selectAllElements(".tarefa");
+// Para cada item da lista de tarefas, gerar um bloco <li>
+if(listaTarefas.length) {
 
-tarefasSkeleton.forEach(item => tarefasPendentes.removeChild(item));
-
-listaTarefas.reverse().forEach(data => {
-	if (!data.completed)
-		blocoTarefa(data)
-	else
-		blocoTarefa(data, { destino: ".tarefas-terminadas" })
-});
-
-
-// Função para alterar o status da tarefa -> Walysson
-const tarefaStatus = (id, status) => {
-	let body = {
-		completed: status
-	}
-
-	return u.fetchAPI(`/tasks/${id}`, "PUT", body, u.token);
-};
-
-/* funcao para mudar o status da tarefa -- Walysson */
-const botoesConcluir = u.selectAllElements('.not-done');
-// Ao clicar, remover da lista de pendentes e mover para lista de concluidas (clone, remove, append)
-botoesConcluir.forEach((botao, index) => {
-
-	let listener = () => {
-		let id = botao.parentNode.id;
-		tarefaStatus(id, true)
-			.then(resposta => resposta.json())
-			.then(dados => {
-				botao.parentNode.remove();
-				blocoTarefa(dados, { destino: ".tarefas-terminadas" });
-			})
-			.catch(err => console.log(err));
-	}
-
-	if (index > 0) {
-		botao.addEventListener('click', listener);
-	}
-
-});
+	listaTarefas.forEach(data => {
+		data.completed
+		? blocoTarefa(data, { destino: ".tarefas-terminadas" })
+		: blocoTarefa(data);
+	});
+}
 
 // Capturar o formulário de nova tarefa
 const formTarefa = u.selectElement(".nova-tarefa");
@@ -113,12 +153,12 @@ formTarefa.addEventListener("submit", event => {
 	event.preventDefault();
 
 	// Pegar o valor do input
-	const tarefa = u.selectElementId("novaTarefa").value;
+	const tarefa = u.selectElementId("novaTarefa");
 
-	if (tarefa.trim().length > 0) {
+	if (tarefa.value.trim().length > 0) {
 		//dados da tarefa
 		let descriptionTarefa = {
-			description: tarefa,
+			description: tarefa.value,
 			completed: false
 		}
 
@@ -129,28 +169,18 @@ formTarefa.addEventListener("submit", event => {
 			.then(data => {
 				blocoTarefa(data, { destino: ".tarefas-pendentes", divStatus: "not-done", append: false });
 			});
+		
+		formTarefa.reset();
 	} else {
+		tarefa.style.borderColor = "red";
+		tarefa.style.backgroundColor = "rgba(255,0,0,0.1)"
 		alert("Informar uma tarefa no campo - Nova Tarefa");
 	}
 });
 
-// Refatorar usando a fetchAPI() mantendo o id da tarefa
-let apagarTarefa = (token, id) => {
-	let api = `https://ctd-todo-api.herokuapp.com/v1/tasks/${id}`;
-	return fetch(api, {
-		method: "DELETE",
-		headers: {
-			"Content-Type": "application/json",
-			"authorization": token
-		}
-	});
-};
-
-// Função para deslogar -- Caroline
-const deslogar = () => {
+// Listener para deslogar o usuário
+const closeApp = u.selectElementId("closeApp");
+closeApp.addEventListener("click", _ => {
 	localStorage.removeItem("token");
 	window.location.href = "/";
-}
-
-const closeApp = u.selectElementId("closeApp");
-closeApp.addEventListener("click", deslogar);
+});

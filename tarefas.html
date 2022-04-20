@@ -40,7 +40,7 @@
     </div>
   </header>
 
-  <form action="" class="nova-tarefa">
+  <form action="" class="nova-tarefa" autocomplete="">
     <div class="not-done "></div>
     <input id="novaTarefa" type="text" placeholder="Nova tarefa">
     <button type="submit">
@@ -48,8 +48,8 @@
     </button>
   </form>
 
-  <div id="skeleton">
-    <ul class="tarefas-pendentes">
+  <ul class="tarefas-pendentes">
+    <div id="skeleton">
       <li class="tarefa">
         <div class="not-done"></div>
         <div class="descricao">
@@ -71,9 +71,8 @@
           <p class="timestamp">Criada em: 15/07/21</p>
         </div>
       </li>
-
-    </ul>
-  </div>
+    </div>
+  </ul>
 
   <h2 class="titulo-terminadas">Tarefas terminadas</h2>
   <ul class="tarefas-terminadas">

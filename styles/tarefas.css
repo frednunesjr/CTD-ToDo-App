@@ -120,6 +120,18 @@ a {
   margin: 2em 15%;
 }
 
+.tarefas-pendentes i {
+  cursor: pointer;
+}
+
+i {
+  transition: 0.5s;
+}
+
+i.fa-trash:hover {
+  color: red;
+}
+
 .tarefa {
   display: flex;
   align-items: center;
@@ -180,6 +192,8 @@ a {
 .tarefa .timestamp {
   font-size: .9em;
   color: rgb(134, 134, 134);
+  margin-left: auto;
+  margin-right: 10px;
 }
 
 /* Tarefas terminadas ----------------------------------------------------------- */
@@ -210,6 +224,8 @@ a {
 .tarefas-terminadas i{
   color: grey;
   background-color: rgb(228, 228, 228);
+  margin-left: 5px;
+  cursor: pointer;
 }
 .tarefas-terminadas button{
   margin-left: 10px;
