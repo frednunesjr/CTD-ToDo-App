@@ -2,10 +2,10 @@ const token = localStorage.getItem("token");
 const pagina = window.location.pathname;
 
 function estaLogado() {
-
-	if (!token && pagina == '/tarefas.html') {
+	let regexTarefa = /tarefa/;
+	if (!token && regexTarefa.test(pagina)) {
 		window.location.href = "./index.html";
-	} else if (token && pagina != '/tarefas.html') {
+	} else if (token && !regexTarefa.test(pagina)) {
 		window.location.href = "./tarefas.html";
 	}
 }
