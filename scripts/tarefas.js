@@ -7,10 +7,10 @@ import u from './utils.js'; // Utils importada como módulo
  */
 
 // Função para alterar o status da tarefa -> Walysson
-const tarefaPUT = (id, status) => u.fetchAPI(`/tasks/${id}`, "PUT", {completed: status}, u.token);
+const tarefaPUT = (id, status) => u.fetchAPI(`/tasks/${id}`, "PUT", {completed: status});
 
 // Função para apagar uma tarefa
-const tarefaDELETE = (id, token) => u.fetchAPI(`/tasks/${id}`, "DELETE", null, u.token);
+const tarefaDELETE = (id, token) => u.fetchAPI(`/tasks/${id}`, "DELETE", null);
 
 // Event Listener para Concluir a Tarefa
 const concluirTarefa = function(){
@@ -118,7 +118,7 @@ const blocoTarefa = (data, options = blocoTarefaOptions) => {
 u.estaLogado();
 
 // Exibir dados do usuário na tela
-u.fetchAPI("/users/getMe", "GET", "", u.token)
+u.fetchAPI("/users/getMe", "GET", "")
 	.then(res => res.json())
 	.then( dados => {
 		const divUsuario 		 = u.selectElement(".user-info");
@@ -127,7 +127,7 @@ u.fetchAPI("/users/getMe", "GET", "", u.token)
 	});
 
 // Obtém a lista de tarefas
-let obterTarefas = await u.fetchAPI('/tasks', 'GET', '', u.token);
+let obterTarefas = await u.fetchAPI('/tasks', 'GET', '');
 let listaTarefas = await obterTarefas.json();
 
 // Selecionar o skeleton e remove ele
@@ -163,7 +163,7 @@ formTarefa.addEventListener("submit", event => {
 		}
 
 		// Fetch na API > enviando os dados do input
-		let criarTarefa = u.fetchAPI('/tasks', 'POST', descriptionTarefa, u.token);
+		let criarTarefa = u.fetchAPI('/tasks', 'POST', descriptionTarefa);
 		criarTarefa
 			.then(res => res.json())
 			.then(data => {

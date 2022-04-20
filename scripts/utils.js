@@ -36,7 +36,7 @@ function append(parent, el) {
 }
 
 // Função para fazer um Fetch na API
-function fetchAPI(path, method, body, token) {
+function fetchAPI(path, method, body) {
 	let api = `https://ctd-todo-api.herokuapp.com/v1${path}`;  // Define o caminho da API
 	let headers = {}; // Cabeçalhos vazios
 

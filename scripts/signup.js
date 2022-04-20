@@ -83,16 +83,9 @@ form.addEventListener("submit", event => {
 		password: 	senha.value
 	}
 
-	let api = "https://ctd-todo-api.herokuapp.com/v1/users";
-	let promessa = fetch(api, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify(dadosUsuario)
-	});
+	let cadastrarUsuario = u.fetchAPI('/users', 'POST', dadosUsuario);
 	
-	promessa
+	cadastrarUsuario
 	.then(function(res){
 		let status = res.status.toString()[0]
 		switch(status){

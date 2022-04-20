@@ -1,5 +1,9 @@
-const campos	= document.querySelectorAll("[required]");
-const form		= document.querySelector("form");
+import u from './utils.js';
+
+u.estaLogado();
+
+const campos	= u.selectAllElements("[required]");
+const form		= u.selectElement("form");
 
 //funcao que valida os campos e exibe mensagem de obrigatorio
 const invalidListener = function(event){
@@ -52,24 +56,17 @@ form.addEventListener("submit", event => {
 	//previne o envio do formulario
 	event.preventDefault();
 	
-	let email = document.querySelector("#email");
-	let senha = document.querySelector("#senha");
+	let email = u.selectElement("#email");
+	let senha = u.selectElement("#senha");
 	
 	let dadosUsuario = {
 		email: 		email.value,
 		password: 	senha.value
 	}
 	
-	let api = "https://ctd-todo-api.herokuapp.com/v1/users/login";
-	let promessa = fetch(api, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify(dadosUsuario)
-	});
+	let login = u.fetchAPI('/users/login', 'POST', dadosUsuario)
 
-	promessa
+	login
 	.then((res) => {
 		let status = res.status.toString()[0]
 		switch(status){
